@@ -1,0 +1,14 @@
+<%
+# Input parameters
+simulation_config = @settings["simulation_config"]
+%>
+
+attach: true
+root: ./
+startup_window: gazebo
+on_project_exit: pkill -9 -f "gzclient"
+windows:
+  - gazebo:
+      layout:
+      panes:
+        - ./utils/launch_simulator.bash <%= simulation_config %>
