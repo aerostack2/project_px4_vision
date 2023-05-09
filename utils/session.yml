@@ -18,7 +18,6 @@ else
 end
 
 if estimator_plugin == "mocap_pose"
-    using_optitrack = true
     platform_config_file = "real_config/platform_config_mocap.yaml"
     state_estimator_config_file = "real_config/state_estimator_mocap.yaml"
 elsif estimator_plugin == "raw_odometry"
