@@ -28,8 +28,10 @@ def drone_run(drone_interface: DroneInterface, simulation=False):
 
     ##### ARM OFFBOARD #####
     if simulation:
+        print("Arm")
         drone_interface.offboard()
         sleep(sleep_time)
+        print("Offboard")
         drone_interface.arm()
         sleep(sleep_time)
 
