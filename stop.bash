@@ -2,7 +2,7 @@
 
 # Set default input element
 if [ $# -eq 0 ]; then
-  set -- "cf0"
+  set -- "drone0"
 fi
 
 # Make a tmux list of sessions to be killed
