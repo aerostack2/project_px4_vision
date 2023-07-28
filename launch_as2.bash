@@ -78,9 +78,14 @@ do
     base_launch="false"
   fi 
 
-  tmuxinator start -n ${ns} -p utils/session.yml drone_namespace=${ns} gps=${gps} simulation=${simulated} estimator_plugin=${estimator_plugin} &
+  tmuxinator start -n ${ns} -p utils/aerostack.yml drone_namespace=${ns} gps=${gps} simulation=${simulated} estimator_plugin=${estimator_plugin} &
   wait
 done
+
+if [[ ${estimator_plugin} == "mocap_pose" ]]; then
+  tmuxinator start -n mocap -p tmuxinator/mocap.yml &
+  wait
+fi
 
 if [[ ${record_rosbag} == "true" ]]; then
   tmuxinator start -n rosbag -p utils/rosbag.yml drone_namespace=$(list_to_string "${drone_ns[@]}") &
