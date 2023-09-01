@@ -11,7 +11,7 @@ usage() {
 }
 
 # Arg parser
-while getopts "se:rtn" opt; do
+while getopts ":sge:rtn:" opt; do
   case ${opt} in
     s )
       simulated="true"
@@ -37,7 +37,7 @@ while getopts "se:rtn" opt; do
       exit 1
       ;;
     : )
-      if [[ ! $OPTARG =~ ^[swrt]$ ]]; then
+      if [[ ! $OPTARG =~ ^[sgrt]$ ]]; then
         echo "Option -$OPTARG requires an argument" >&2
         usage
         exit 1

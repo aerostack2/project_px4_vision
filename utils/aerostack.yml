@@ -1,7 +1,7 @@
 <%
 # Input parameters
 drone_namespace     = @settings["drone_namespace"]
-gps                 = @settings["gps"] == "false"
+gps                 = @settings["gps"] == "true"
 simulation          = @settings["simulation"] == "true"
 estimator_plugin    = @settings["estimator_plugin"]
 
