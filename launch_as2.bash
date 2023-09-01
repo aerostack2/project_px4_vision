@@ -93,7 +93,7 @@ if [[ ${record_rosbag} == "true" ]]; then
 fi
 
 if [[ ${launch_keyboard_teleop} == "true" ]]; then
-  tmuxinator start -n keyboard_teleop -p utils/keyboard_teleop.yml simulation=true drone_namespace=$(list_to_string "${drone_ns[@]}") &
+  tmuxinator start -n keyboard_teleop -p utils/keyboard_teleop.yml simulation=${simulated} drone_namespace=$(list_to_string "${drone_ns[@]}") &
   wait
 fi
 
