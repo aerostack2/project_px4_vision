@@ -1,0 +1,16 @@
+<%
+# Input parameters
+simulation          = @settings["simulation"] == "true"
+
+%>
+
+attach: true
+root: ./
+windows:
+  - micro_xrce_agent:
+      layout: tiled
+      panes:
+    <%- if simulation %>
+            - MicroXRCEAgent udp4 -p 8888
+    <%- else %>
+            - MicroXRCEAgent serial -b 921600 --dev /dev/ttyUSB0

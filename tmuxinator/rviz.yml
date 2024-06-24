@@ -1,0 +1,17 @@
+<%
+# Input parameters
+simulation = @settings["simulation"] == "true"
+drone_list = @settings["drone_list"]
+%>
+
+name: rviz
+attach: true
+root: ./
+startup_window: rviz
+windows:
+  - rviz:
+      layout:
+      panes:
+        - ros2 launch as2_visualization swarm_viz.launch.py
+            namespace_list:=<%= drone_list %>
+            rviz_config:=viz/swarm_config.rviz

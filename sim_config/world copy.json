@@ -5,19 +5,15 @@
         "namespace": "px1",
         "airframe": "4001",
         "model": "x500",
-        "pose": "-2,0,0.5,0,0,0"
+        "pose": "0,0,1,0,0,0",
+        "instance": 1
       },
       {
         "namespace": "px2",
         "airframe": "4001",
         "model": "x500",
-        "pose": "2,0,0.5,0,0,0"
-      },
-      {
-        "namespace": "px3",
-        "airframe": "4001",
-        "model": "x500",
-        "pose": "0,0,0.5,0,0,0"
+        "pose": "2,2,1,0,0,0",
+        "instance": 2
       }
   ]
 }

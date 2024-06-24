@@ -1,16 +1,22 @@
 #!/bin/bash
 
-# Set default input element
-if [ $# -eq 0 ]; then
-  set -- "drone0"
-fi
+# Stop docker containers
+./docker/docker_stop.bash
 
-# Make a tmux list of sessions to be killed
-tmux_session_list=("keyboard_teleop" "rosbag" "mocap" "gazebo")
-
-# For each drone namespace, add to the list
+# For each drone namespace in argument
 for ns in "$@"; do
   tmux_session_list+=("$ns")
+  tmux_session_list+=("gazebo_$ns")
+done
+
+# List of Tmux sessions to be killed
+tmux_session_list=("keyboard_teleop" "rosbag" "mocap" "gazebo" "rviz" "ground_station")
+
+# Get drone namespaces from simulation config file
+drone_namespaces_sim=$(python3 utils/get_drones.py -p sim_config/world.json --sep ' ')
+for namespace in ${drone_namespaces_sim[@]}; do
+    tmux_session_list+=("${namespace}")
+    tmux_session_list+=("gazebo_${namespace}")
 done
 
 # If inside tmux session, get the current session name
@@ -19,7 +25,7 @@ if [[ -n "$TMUX" ]]; then
 fi
 
 # Send Ctrl+C signal to each window of each session
-for session in "${tmux_session_list[@]}"; do
+for session in ${tmux_session_list[@]}; do
   # Check if session exists
   if tmux has-session -t "$session" 2>/dev/null; then
     # Get the list of windows in the session
@@ -33,14 +39,8 @@ for session in "${tmux_session_list[@]}"; do
   fi
 done
 
-# # Kill gazebo
-# pkill -9 -f "gazebo" < /dev/null
-
-# # Kill gazebo bridges
-# pkill -9 -f "ros_gz_bridge"
-
 # Kill all tmux sessions from the list except for the current one
-for session in "${tmux_session_list[@]}"; do
+for session in ${tmux_session_list[@]}; do
   if [[ "$session" != "$current_session" ]]; then
     tmux kill-session -t "$session" 2>/dev/null
   fi

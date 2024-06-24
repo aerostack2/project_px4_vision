@@ -1,0 +1,37 @@
+<%
+# Input parameters
+drone_namespaces = @settings["drone_namespaces"]
+keyboard_teleop = @settings["keyboard_teleop"] == "true"
+simulated = @settings["simulated"] == "true"
+rviz = @settings["rviz"] == "true"
+mocap4ros2 = @settings["mocap4ros2"] == "true"
+%>
+
+name: ground_station 
+attach: true
+root: ./
+windows:
+<%- if rviz %>
+  - rviz:
+      layout:
+      panes:
+        - ros2 launch as2_visualization swarm_viz.launch.py
+            namespace_list:=<%= drone_list %>
+            rviz_config:=viz/swarm_config.rviz
+<%- end %>
+<%- if keyboard_teleop %>
+  - keyboard_teleop:
+      layout:
+      panes:
+        - ros2 launch as2_keyboard_teleoperation as2_keyboard_teleoperation_launch.py
+            namespace:=<%= drone_namespaces %>
+<%- end %>
+<%- if mocap4ros2 %>
+  - mocap:
+      layout:
+      panes:
+        - ros2 launch mocap4r2_optitrack_driver optitrack2.launch.py
+            namespace:=mocap
+            config_file:=real_config/optitrack.yaml
+        - sleep 1; ros2 lifecycle set /mocap/mocap4r2_optitrack_driver_node activate
+<%- end %>

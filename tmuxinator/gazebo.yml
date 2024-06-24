@@ -1,0 +1,15 @@
+<%
+# Input parameters
+simulation_config = @settings["simulation_config"]
+namespace = @settings["namespace"]
+%>
+
+attach: true
+root: ./
+windows:
+  - gazebo:
+      layout:
+      panes:
+        - python3 docker/run_instance.py
+            -p <%= simulation_config %>
+            -n <%= namespace %>
