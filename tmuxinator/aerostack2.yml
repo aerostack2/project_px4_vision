@@ -21,8 +21,10 @@ end
 
 if simulation
     config_path = "sim_config"
+    fcu_url = "udp://:14540@127.0.0.1:14557"
 else
     config_path = "real_config"
+    fcu_url = "/dev/ttyACM0:57600"
 end
 
 if use_gps
@@ -51,6 +53,7 @@ windows:
         - ros2 launch as2_platform_mavlink as2_platform_mavlink_launch.py
             namespace:=<%= drone_namespace %>
             platform_config_file:=<%= config_path %>/<%= platform_config_file %>
+            fcu_url:=<%= fcu_url %>
         - ros2 launch as2_state_estimator state_estimator_launch.py
             namespace:=<%= drone_namespace %>
             plugin_name:=<%= estimator_plugin %>
