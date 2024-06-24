@@ -64,7 +64,7 @@ if [[ ${simulated} == "true" ]]; then
 fi
 
 # Launch aerostack2
-tmuxinator debug start -n ${drone_namespace} -p tmuxinator/aerostack2.yml \
+tmuxinator start -n ${drone_namespace} -p tmuxinator/aerostack2.yml \
     drone_namespace=${drone_namespace} \
     micro_xrce_agent=${micro_xrce_agent} \
     estimator_plugin=${estimator_plugin} \

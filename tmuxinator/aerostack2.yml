@@ -48,7 +48,7 @@ windows:
   - basics_robotics_functions:
       layout: tiled
       panes:
-        - ros2 launch as2_platform_mavlink as2_platform_mavlink.py
+        - ros2 launch as2_platform_mavlink as2_platform_mavlink_launch.py
             namespace:=<%= drone_namespace %>
             platform_config_file:=<%= config_path %>/<%= platform_config_file %>
         - ros2 launch as2_state_estimator state_estimator_launch.py
