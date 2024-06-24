@@ -14,12 +14,12 @@ usage() {
 }
 
 # Initialize variables with default values
-PX4_UXRCE_DDS_NS=""
+PX4_UXRCE_DDS_NS="0"
 PX4_SYS_AUTOSTART="4001"
 PX4_GZ_MODEL="x500"
 PX4_GZ_MODEL_POSE="0,1,1"
 PX4_GZ_WORLD="default"
-INSTANCE="1"
+INSTANCE="0"
 COMMAND="./build/px4_sitl_default/bin/px4"
 
 # Arg parser

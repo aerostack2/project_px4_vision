@@ -7,7 +7,7 @@ usage() {
     echo "      -g: use gps, choices: [true | false]. Default: false"
     echo "      -r: record rosbag"
     echo "      -s: simulated, choices: [true | false]"
-    echo "      -m: launch MicroXRCEAgent, choices: [true | false]. Default: true"
+    echo "      -m: launch MicroXRCEAgent, choices: [true | false]. Default: false"
 }
 
 # Initialize variables with default values
@@ -16,7 +16,7 @@ estimator_plugin="raw_odometry"
 use_gps="false"
 record_rosbag="false"
 simulated="false"
-micro_xrce_agent="true"
+micro_xrce_agent="false"
 
 # Arg parser
 while getopts "n:e:grtsmv" opt; do

@@ -48,11 +48,9 @@ windows:
   - basics_robotics_functions:
       layout: tiled
       panes:
-        - ros2 launch as2_platform_pixhawk pixhawk_launch.py
+        - ros2 launch as2_platform_mavlink as2_platform_mavlink.py
             namespace:=<%= drone_namespace %>
             platform_config_file:=<%= config_path %>/<%= platform_config_file %>
-            fmu_prefix:=/<%= drone_namespace %>
-            target_system_id:=<%= instance %>
         - ros2 launch as2_state_estimator state_estimator_launch.py
             namespace:=<%= drone_namespace %>
             plugin_name:=<%= estimator_plugin %>
