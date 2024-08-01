@@ -1,13 +1,13 @@
 /**:
   ros__parameters:
-    mass: 0.82
+    mass: 1.3
     trajectory_control:
       antiwindup_cte: 1.0
       alpha: 0.1
       kp:
         x: 6.0
         y: 6.0
-        z: 6.0
+        z: 4.0
       ki:
         x: 0.0
         y: 0.0

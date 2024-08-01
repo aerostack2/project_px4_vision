@@ -1,0 +1,89 @@
+/**:
+  # # Global Parameters
+  # ros__parameters:
+  #   tf_timeout_threshold: 0.05
+
+  # Basic Robotics Functions
+  # Platform
+  platform:
+    ros__parameters:
+      max_thrust: 29.0
+      min_thrust: 0.15
+      # # Indoor RealSense
+      # external_odom: true
+
+  # State Estimator
+  state_estimator:
+    ros__parameters:
+      # Indoor Raw Odometry
+      plugin_name: "raw_odometry"
+      # # Indoor RealSense
+      # plugin_name: "raw_odometry"
+      # odom_topic: "sensor_measurements/realsense/odom"
+      # # Indoor Motion Capture
+      # plugin_name: "mocap_pose"
+      # mocap_topic: "/mocap/rigid_bodies"
+      # twist_smooth_filter_cte: 0.1
+      # orientation_smooth_filter_cte: 0.1
+      # # Outdoor (GPS) Raw Odometry
+      # plugin_name: "raw_odometry"
+      # use_gps: true
+      # set_origin_on_start: true
+
+  # Behaviors Motion
+  TakeoffBehavior:
+    ros__parameters:
+      # takeoff_plugin_name: "takeoff_plugin_speed"
+      takeoff_plugin_name: "takeoff_plugin_position"
+      # takeoff_plugin_name: "takeoff_plugin_trajectory"
+  LandBehavior:
+    ros__parameters:
+      land_plugin_name: "land_plugin_speed"
+      # land_plugin_name: "land_plugin_trajectory"
+  GoToBehavior:
+    ros__parameters:
+      go_to_plugin_name: "go_to_plugin_position"
+      # go_to_plugin_name: "go_to_plugin_trajectory"
+  FollowPathBehavior:
+    ros__parameters:
+      follow_path_plugin_name: "follow_path_plugin_position"
+      # follow_path_plugin_name: "follow_path_plugin_trajectory"
+
+  # Hardware Interfaces
+  usb_camera_interface:
+    ros__parameters:
+      device: "/dev/video0"
+      framerate: 30.0 # Frame rate of the camera (fps)
+      # Camera configuration
+      camera_transform:
+        parent_frame: "base_link" # Parent frame of the camera
+        x: 0.1 # Translation in x (m)
+        y: 0.0 # Translation in y (m)
+        z: 0.03 # Translation in z (m)
+        roll: -1.57079632679 # Rotation around x (rad)
+        pitch: 0.0 # Rotation around y (rad)
+        yaw: -1.57079632679 # Rotation around z (rad)
+
+# Specific Parameters for each drone
+# drone0:
+#   # Motion Capture
+#   state_estimator:
+#     ros__parameters:
+#       rigid_body_name: "1"
+
+# For simulation, specific target_system_id for each drone
+drone0:
+  platform:
+    ros__parameters:
+      fmu_prefix: /drone0
+      target_system_id: 0
+drone1:
+  platform:
+    ros__parameters:
+      fmu_prefix: /drone1
+      target_system_id: 1
+drone2:
+  platform:
+    ros__parameters:
+      fmu_prefix: /drone2
+      target_system_id: 2
