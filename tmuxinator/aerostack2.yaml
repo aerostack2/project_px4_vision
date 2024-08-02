@@ -2,7 +2,6 @@
 # Input parameters
 drone_namespace           = @settings["drone_namespace"]
 motion_controller_plugin  = @settings["motion_controller_plugin"]
-behavior_tree             = @settings["behavior_tree"] == "true"
 micro_xrce_agent          = @settings["micro_xrce_agent"] == "true"
 rosbag                    = @settings["rosbag"] == "true"
 %>
@@ -62,11 +61,10 @@ windows:
   - mission_execution:
       layout:
       panes:
-        <%- if behavior_tree %>
+        # Behavior tree
         - ros2 launch as2_behavior_tree behavior_trees.launch.py
             drone_id:=<%= drone_namespace %>
             tree:=./trees/square.xml
-        <%- end %>
 
   # Mission monitoring
   - mission_monitoring:

@@ -63,14 +63,11 @@ Re-launch the command for each drone you want to launch, changing the drone name
 
 The flags for the components launcher are:
 
-- **-n**: drone namespace. Default is 'drone0'
+- **-n**: select drone namespace to launch. Default is 'drone0'
 - **-c**: motion controller plugin (pid_speed_controller, differential_flatness_controller), choices: [pid, df]. Default: pid
-- **-b**: launch behavior tree
 - **-x**: launch micro_xrce_agent for real flights. Default not launch
 - **-r**: record rosbag. Default not launch
-- **-g**: launch using gnome-terminal instead of tmux
-
-
+- **-g**: launch using gnome-terminal instead of tmux. Default not set
 
 ### 2. Launch aerostack2 nodes for the ground station
 To launch aerostack2 nodes for the ground station, execute once the following command:
@@ -86,7 +83,7 @@ The flags for the components launcher are:
 - **-v**: open rviz. Default not launch
 - **-m**: launch mocap4ros2. Default not launch
 - **-r**: record rosbag. Default not launch
-- **-g**: launch using gnome-terminal instead of tmux
+- **-g**: launch using gnome-terminal instead of tmux. Default not set
 
 ### 3. Launch a mission
 There are several missions that can be executed:
@@ -110,10 +107,6 @@ There are several missions that can be executed:
 - **AS2 Behavior Trees single drone mission**: You can execute a mission that used AS2 Behavior Trees, launching the mission with:
   ```bash
   python3 mission_behavior_tree.py -n drone0
-  ```
-  You must launch behavior trees with the flag `-b`, as:
-  ```bash
-  ./launch_as2.bash -n drone0 -b
   ```
 
 ### 4. End the execution

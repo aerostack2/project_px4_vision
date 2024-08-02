@@ -2,30 +2,25 @@
 
 usage() {
     echo "  options:"
-    echo "      -n: drone namespace. Default is 'drone0'"
+    echo "      -n: select drone namespace to launch. Default is 'drone0'"
     echo "      -c: motion controller plugin (pid_speed_controller, differential_flatness_controller), choices: [pid, df]. Default: pid"
-    echo "      -b: launch behavior tree"
     echo "      -x: launch micro_xrce_agent for real flights. Default not launch"
     echo "      -r: record rosbag. Default not launch"
-    echo "      -g: launch using gnome-terminal instead of tmux"
+    echo "      -g: launch using gnome-terminal instead of tmux. Default not set"
 }
 
 # Initialize variables with default values
 drones_namespace="drone0"
 motion_controller_plugin="pid"
-behavior_tree="false"
 micro_xrce_agent="false"
 rosbag="false"
 use_gnome="false"
 
 # Arg parser
-while getopts "n:bxrg" opt; do
+while getopts "n:xrg" opt; do
   case ${opt} in
     n )
       drones_namespace="${OPTARG}"
-      ;;
-    b )
-      behavior_tree="true"
       ;;
     x )
       micro_xrce_agent="true"
@@ -85,7 +80,6 @@ fi
 eval "tmuxinator ${tmuxinator_mode} -n ${drones_namespace} -p tmuxinator/aerostack2.yaml \
     drone_namespace=${drones_namespace} \
     motion_controller_plugin=${motion_controller_plugin} \
-    behavior_tree=${behavior_tree} \
     micro_xrce_agent=${micro_xrce_agent} \
     rosbag=${rosbag} \
     ${tmuxinator_end}"

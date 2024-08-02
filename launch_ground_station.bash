@@ -7,7 +7,7 @@ usage() {
     echo "      -v: open rviz. Default not launch"
     echo "      -m: launch mocap4ros2. Default not launch"
     echo "      -r: record rosbag. Default not launch"
-    echo "      -g: launch using gnome-terminal instead of tmux"
+    echo "      -g: launch using gnome-terminal instead of tmux. Default not set"
 }
 
 # Initialize variables with default values
