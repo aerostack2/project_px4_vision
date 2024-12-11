@@ -2,34 +2,34 @@
 
 usage() {
     echo "  options:"
-    echo "      -s: simulated, choices: [true | false]"
-    echo "      -g: use GPS, choices: [true | false]"
-    echo "      -e: estimator_type, choices: [raw_odometry, mocap_pose]"
-    echo "      -r: record rosbag"
-    echo "      -t: launch keyboard teleoperation"
-    echo "      -n: drone namespace, default is drone0"
+    echo "      -n: select drone namespace to launch. Default is 'drone0'"
+    echo "      -c: motion controller plugin (pid_speed_controller, differential_flatness_controller), choices: [pid, df]. Default: pid"
+    echo "      -x: launch micro_xrce_agent for real flights. Default not launch"
+    echo "      -r: record rosbag. Default not launch"
+    echo "      -g: launch using gnome-terminal instead of tmux. Default not set"
 }
 
+# Initialize variables with default values
+drones_namespace="drone0"
+motion_controller_plugin="pid"
+micro_xrce_agent="false"
+rosbag="false"
+use_gnome="false"
+
 # Arg parser
-while getopts ":sge:rtn:" opt; do
+while getopts "n:xrg" opt; do
   case ${opt} in
-    s )
-      simulated="true"
+    n )
+      drones_namespace="${OPTARG}"
       ;;
-    g )
-      gps="true"
-      ;;
-    e )
-      estimator_plugin="${OPTARG}"
+    x )
+      micro_xrce_agent="true"
       ;;
     r )
-      record_rosbag="true"
+      rosbag="true"
       ;;
-    t )
-      launch_keyboard_teleop="true"
-      ;;
-    n )
-      drone_namespace="${OPTARG}"
+    g )
+      use_gnome="true"
       ;;
     \? )
       echo "Invalid option: -$OPTARG" >&2
@@ -37,7 +37,7 @@ while getopts ":sge:rtn:" opt; do
       exit 1
       ;;
     : )
-      if [[ ! $OPTARG =~ ^[sgrt]$ ]]; then
+      if [[ ! $OPTARG =~ ^[wrt]$ ]]; then
         echo "Option -$OPTARG requires an argument" >&2
         usage
         exit 1
@@ -46,61 +46,48 @@ while getopts ":sge:rtn:" opt; do
   esac
 done
 
-source utils/tools.bash
-
-# Shift optional args
-shift $((OPTIND -1))
-
-## DEFAULTS
-simulated=${simulated:="false"}
-gps=${gps:="false"}
-estimator_plugin=${estimator_plugin:="raw_odometry"}
-record_rosbag=${record_rosbag:="false"}
-launch_keyboard_teleop=${launch_keyboard_teleop:="false"}
-drone_namespace=${drone_namespace:="drone"}
-
-if [[ ${simulated} == "true" ]]; then
-  simulation_config="sim_config/world.json"
+# If no drone namespaces are provided, finish the execution
+if [ -z "$drones_namespace" ]; then
+  echo "No drone namespace provided. Set it using the -n option"
+  exit 1
 fi
 
-# Generate the list of drone namespaces
-drone_ns=()
-num_drones=1
-for ((i=0; i<${num_drones}; i++)); do
-  drone_ns+=("$drone_namespace$i")
-done
+# Check if motion controller plugins are valid
+case ${motion_controller_plugin} in
+  pid )
+    motion_controller_plugin="pid_speed_controller"
+    ;;
+  df )
+    motion_controller_plugin="differential_flatness_controller"
+    ;;
+  * )
+    echo "Invalid motion controller plugin: ${motion_controller_plugin}" >&2
+    usage
+    exit 1
+    ;;
+esac
 
-for ns in "${drone_ns[@]}"
-do
-  if [[ ${ns} == ${drone_ns[0]} ]]; then
-    base_launch="true"
-  else
-    base_launch="false"
-  fi 
-
-  tmuxinator start -n ${ns} -p utils/aerostack.yml drone_namespace=${ns} gps=${gps} simulation=${simulated} estimator_plugin=${estimator_plugin} &
-  wait
-done
-
-if [[ ${estimator_plugin} == "mocap_pose" ]]; then
-  tmuxinator start -n mocap -p tmuxinator/mocap.yml &
-  wait
+# Select between tmux and gnome-terminal
+tmuxinator_mode="start"
+tmuxinator_end="wait"
+tmp_file="/tmp/as2_project_launch_${drones_namespace}.txt"
+if [[ ${use_gnome} == "true" ]]; then
+  tmuxinator_mode="debug"
+  tmuxinator_end="> ${tmp_file} && python3 utils/tmuxinator_to_genome.py -p ${tmp_file} && wait"
 fi
 
-if [[ ${record_rosbag} == "true" ]]; then
-  tmuxinator start -n rosbag -p utils/rosbag.yml drone_namespace=$(list_to_string "${drone_ns[@]}") &
-  wait
-fi
+# Launch aerostack2 for each drone namespace
+eval "tmuxinator ${tmuxinator_mode} -n ${drones_namespace} -p tmuxinator/aerostack2.yaml \
+    drone_namespace=${drones_namespace} \
+    motion_controller_plugin=${motion_controller_plugin} \
+    micro_xrce_agent=${micro_xrce_agent} \
+    rosbag=${rosbag} \
+    ${tmuxinator_end}"
 
-if [[ ${launch_keyboard_teleop} == "true" ]]; then
-  tmuxinator start -n keyboard_teleop -p utils/keyboard_teleop.yml simulation=${simulated} drone_namespace=$(list_to_string "${drone_ns[@]}") &
-  wait
+# Attach to tmux session
+if [[ ${use_gnome} == "false" ]]; then
+  tmux attach-session -t ${drones_namespace}
+# If tmp_file exists, remove it
+elif [[ -f ${tmp_file} ]]; then
+  rm ${tmp_file}
 fi
-
-if [[ ${simulated} == "true" ]]; then
-  tmuxinator start -n gazebo -p utils/gazebo.yml simulation_config=${simulation_config} &
-  wait
-fi
-
-# Attach to tmux session ${drone_ns[@]}, window 0
-tmux attach-session -t ${drone_ns[0]}:mission

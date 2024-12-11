@@ -1,0 +1,95 @@
+<%
+# Input parameters
+drone_namespace           = @settings["drone_namespace"]
+motion_controller_plugin  = @settings["motion_controller_plugin"]
+micro_xrce_agent          = @settings["micro_xrce_agent"] == "true"
+rosbag                    = @settings["rosbag"] == "true"
+%>
+name: <%= drone_namespace %>
+attach: false
+root: ./
+startup_window: mission_monitoring
+windows:
+  # Zenoh
+  # - zenoh:
+  #     layout:
+  #     panes:
+  #       - zenoh-bridge-ros2dds
+
+  # Platform
+  - platform:
+      layout: tiled
+      panes:
+      # Platform
+      <% if micro_xrce_agent %>
+        # - MicroXRCEAgent udp4 -p 8888
+        - MicroXRCEAgent serial -b 921600 --dev /dev/ttyUSB0
+      <% end %>
+        - ros2 launch as2_platform_pixhawk pixhawk_launch.py
+            namespace:=<%= drone_namespace %>
+            platform_config_file:=config/config.yaml
+
+  # Basic Robotics Functions
+  - basics_robotics_functions:
+      layout:
+      panes:
+        # State Estimation
+        - ros2 launch as2_state_estimator state_estimator_launch.py
+            namespace:=<%= drone_namespace %>
+            config_file:=config/config.yaml
+        # Motion Controller
+        - ros2 launch as2_motion_controller controller_launch.py
+            namespace:=<%= drone_namespace %>
+            config_file:=config/config.yaml
+            plugin_name:=<%= motion_controller_plugin %>
+            plugin_config_file:=config/<%= motion_controller_plugin %>.yaml
+
+  # Behaviors
+  - behaviors:
+      layout:
+      panes:
+        # Motion Behaviors
+        - ros2 launch as2_behaviors_motion motion_behaviors_launch.py
+            namespace:=<%= drone_namespace %>
+            config_file:=config/config.yaml
+        # Trajectory Generation Behavior
+        - ros2 launch as2_behaviors_trajectory_generation generate_polynomial_trajectory_behavior_launch.py
+            namespace:=<%= drone_namespace %>
+            config_file:=config/config.yaml
+
+  # Mission execution
+  - mission_execution:
+      layout:
+      panes:
+        # Behavior tree
+        - ros2 launch as2_behavior_tree behavior_trees.launch.py
+            drone_id:=<%= drone_namespace %>
+            tree:=./trees/square.xml
+
+  # Mission monitoring
+  - mission_monitoring:
+      layout: tiled
+      panes:
+        - ros2 run as2_alphanumeric_viewer as2_alphanumeric_viewer_node
+            --ros-args -r  __ns:=/<%= drone_namespace %>
+        - echo Run here the mission
+
+  <%- if rosbag %>
+  # Rosbag
+  - rosbag:
+      layout:
+      panes:
+        - ./rosbag/record_rosbag.bash <%= drone_namespace %>
+  <%- end %>
+
+  # # Hardware interfaces
+  # - hardware:
+  #     layout:
+  #     panes:
+  #       - ros2 launch as2_usb_camera_interface as2_usb_camera_interface_launch.py
+  #           namespace:=<%= drone_namespace %>
+  #           config_file:=config/config.yaml
+  #           camera_calibration_file:=config/camera_calibration.yaml
+  #       - ros2 launch as2_realsense_interface as2_realsense_interface_launch.py
+  #           namespace:=<%= drone_namespace %>
+  #           device:=t265

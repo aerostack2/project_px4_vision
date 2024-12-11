@@ -1,0 +1,15 @@
+<%
+# Input parameters
+drone_namespace  = @settings["drone_namespace"]
+%>
+
+name: pixhawk_sitl
+attach: false
+root: ./
+windows:
+  - pixhawk_sitl:
+      layout:
+      panes:
+      <%- drone_namespace.split(',').each do |drone| %>
+        - python3 sitl_config/docker/run_instance.py -p sitl_config/world.yaml -n <%= drone %>
+      <%- end %>

@@ -14,9 +14,9 @@
         y: 0.0
         z: 0.0
       ki:
-        x: 0.0
-        y: 0.0
-        z: 0.0
+        x: 0.01
+        y: 0.01
+        z: 0.01
     speed_control:
       reset_integral: false
       antiwindup_cte : 1.0

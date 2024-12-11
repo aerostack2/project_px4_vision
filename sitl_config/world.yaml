@@ -1,0 +1,19 @@
+world: "default" # Name of the world
+drones:
+  - namespace: "drone0" # Namespace of the drone in ROS 2
+    airframe: "4001" # Airframe of the drone
+    model: "x500" # Model of the drone
+    pose: "-2,0,0.5,0,0,0" # Initial pose of the drone: x, y, z, roll, pitch, yaw
+    instance: 0 # Instance of the drone
+
+  - namespace: "drone1"  # Namespace of the drone in ROS 2
+    airframe: "4001" # Airframe of the drone
+    model: "x500" # Model of the drone
+    pose: "2,0,0.5,0,0,0" # Initial pose of the drone: x, y, z, roll, pitch, yaw
+    instance: 1 # Instance of the drone
+
+  - namespace: "drone2" # Namespace of the drone in ROS 2
+    airframe: "4001" # Airframe of the drone
+    model: "x500" # Model of the drone
+    pose: "0,0,0.5,0,0,0" # Initial pose of the drone: x, y, z, roll, pitch, yaw
+    instance: 2 # Instance of the drone
