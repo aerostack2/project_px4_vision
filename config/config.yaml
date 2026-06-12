@@ -50,6 +50,11 @@
       follow_path_plugin_name: "follow_path_plugin_position"
       # follow_path_plugin_name: "follow_path_plugin_trajectory"
 
+  # Trajectory Generation Behavior
+  TrajectoryGeneratorBehavior:
+    ros__parameters:
+      plugin_name: "dynamic_mav_trajectory_generator"
+
   # Hardware Interfaces
   usb_camera_interface:
     ros__parameters:
