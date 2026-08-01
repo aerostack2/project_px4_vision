@@ -18,18 +18,37 @@
     ros__parameters:
       # Indoor Raw Odometry
       plugin_name: "raw_odometry"
+
       # # Indoor RealSense
       # plugin_name: "raw_odometry"
-      # odom_topic: "sensor_measurements/realsense/odom"
+      # raw_odometry:
+      #   odom_sub_topic: "sensor_measurements/realsense/odom"
+
       # # Indoor Motion Capture
-      # plugin_name: "mocap_pose"
-      # mocap_topic: "/mocap/rigid_bodies"
-      # twist_smooth_filter_cte: 0.1
-      # orientation_smooth_filter_cte: 0.1
+      # plugin_name: "ground_truth"
+      # ground_truth:
+      #   mocap_sub_topic: "/mocap/rigid_bodies"  # Non-empty: subscribe to mocap instead of a pose topic.
+      #   twist_sub_topic: ""  # Empty: differentiate the mocap pose for twist.
+      #   twist_smooth_filter_cte: 0.1  # (0,1]; 1 = no filter. Applies to the differentiated twist.
+      #   rigid_body_name: "1"
+
       # # Outdoor (GPS) Raw Odometry
       # plugin_name: "raw_odometry"
-      # use_gps: true
-      # set_origin_on_start: true
+      # raw_odometry:
+      #   use_gps: true  # earth->map comes from the first GPS fix.
+
+      # # RealSense odometry fused with the IMU (simple_ekf)
+      # # Might need sensor_measurements/imu and covariance tuning.
+      # plugin_name: "simple_ekf"
+      # simple_ekf:
+      #   update_topics: ["odom"]
+      #   odom:
+      #     topic: "sensor_measurements/realsense/odom"
+      #     type: "nav_msgs/msg/Odometry"
+      #     set_earth_map: false  # Dead-reckoned: must not define the world origin.
+      #     use_message_covariance: true
+      #     position_multiplier: [1.0, 1.0, 1.0]
+      #     orientation_multiplier: [1.0, 1.0, 1.0]
 
   # Behaviors Motion
   TakeoffBehavior:
