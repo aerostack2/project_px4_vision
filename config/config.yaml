@@ -28,7 +28,7 @@
       # plugin_name: "ground_truth"
       # ground_truth:
       #   mocap_sub_topic: "/mocap/rigid_bodies"  # Non-empty: subscribe to mocap instead of a pose topic.
-      #   twist_sub_topic: ""  # Empty: differentiate the mocap pose for twist.
+      #   twist_sub_topic: ""  # Empty: differentiate the mocap pose for twist (the default).
       #   twist_smooth_filter_cte: 0.1  # (0,1]; 1 = no filter. Applies to the differentiated twist.
       #   rigid_body_name: "1"
 
