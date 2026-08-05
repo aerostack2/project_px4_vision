@@ -18,18 +18,32 @@
     ros__parameters:
       # Indoor Raw Odometry
       plugin_name: "raw_odometry"
+
       # # Indoor RealSense
       # plugin_name: "raw_odometry"
-      # odom_topic: "sensor_measurements/realsense/odom"
+      # raw_odometry:
+      #   odom_sub_topic: "sensor_measurements/realsense/odom"
+
       # # Indoor Motion Capture
-      # plugin_name: "mocap_pose"
-      # mocap_topic: "/mocap/rigid_bodies"
-      # twist_smooth_filter_cte: 0.1
-      # orientation_smooth_filter_cte: 0.1
+      # plugin_name: "ground_truth"
+      # ground_truth:
+      #   mocap_sub_topic: "/mocap/rigid_bodies"  # Non-empty: subscribe to mocap instead of a pose topic.
+      #   twist_sub_topic: ""  # Empty: differentiate the mocap pose for twist (the default).
+      #   twist_smooth_filter_cte: 0.1  # (0,1]; 1 = no filter. Applies to the differentiated twist.
+      #   rigid_body_name: "1"
+
       # # Outdoor (GPS) Raw Odometry
       # plugin_name: "raw_odometry"
-      # use_gps: true
-      # set_origin_on_start: true
+      # raw_odometry:
+      #   use_gps: true  # Anchor earth at a GPS datum.
+      #   gps_origin:
+      #     set_origin: "first_gps"  # first_gps: tf tree at the first GPS fix received. (default)
+      #                              # manual: use the coordinates manually set below.
+      #                              # service: use the coordinates served by service.
+      #     coordinates:  # Only used with "manual".
+      #       latitude: 0.0
+      #       longitude: 0.0
+      #       altitude: 0.0
 
   # Behaviors Motion
   TakeoffBehavior:
