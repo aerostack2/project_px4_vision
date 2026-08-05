@@ -37,28 +37,13 @@
       # raw_odometry:
       #   use_gps: true  # Anchor earth at a GPS datum.
       #   gps_origin:
-      #     set_origin: "first_gps"  # first_gps: the first fix received becomes the datum.
-      #                              # manual: use the coordinates below, so earth lands in
-      #                              #   the same place on every flight.
-      #                              # service: hold the first fix and wait for a set_origin
-      #                              #   call; earth->map is not published until then.
+      #     set_origin: "first_gps"  # first_gps: tf tree at the first GPS fix received. (default)
+      #                              # manual: use the coordinates manually set below.
+      #                              # service: use the coordinates served by service.
       #     coordinates:  # Only used with "manual".
       #       latitude: 0.0
       #       longitude: 0.0
       #       altitude: 0.0
-
-      # # RealSense odometry fused with the IMU (simple_ekf)
-      # # Might need sensor_measurements/imu and covariance tuning.
-      # plugin_name: "simple_ekf"
-      # simple_ekf:
-      #   update_topics: ["odom"]
-      #   odom:
-      #     topic: "sensor_measurements/realsense/odom"
-      #     type: "nav_msgs/msg/Odometry"
-      #     set_earth_map: false  # Dead-reckoned: must not define the world origin.
-      #     use_message_covariance: true
-      #     position_multiplier: [1.0, 1.0, 1.0]
-      #     orientation_multiplier: [1.0, 1.0, 1.0]
 
   # Behaviors Motion
   TakeoffBehavior:
